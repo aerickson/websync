@@ -3,25 +3,56 @@
 # because it has already all the ingredients for 
 # our Nodejs app
 #
-FROM    dockerfile/nodejs
+#FROM    dockerfile/nodejs
+FROM node:12
 
 #
 # Bundle our app source with the container, we
 # could also be fetching the code from a git 
 # repo, or really anything else.
 #
-ADD ./dist /src
+RUN npm install -g bower grunt-cli
+
+#RUN mkdir /src/
+WORKDIR /src
 
 #
 # Install app dependencies - Got to install them 
 # all! :)
 #
-RUN cd /src; npm install
+
+#RUN npm config set registry https://npm-cache.layer0.eu.org
+RUN npm set cache /src/.npm --global
+RUN apt install libc-dev 
+RUN (test -e /src || mkdir /src)|| true  && apt install python3 make gcc
+COPY app assets default.wsdata.json gulpfile.js server.js test lib bower.json /src/
+
+COPY package.json /src
+RUN npm pack --dry-run 
+WORKDIR /src
+
+
+#ADD ./ /src
+
+
+#RUN apk add musl-dev
+RUN npm i --package-lock-only && npm audit fix --force
+RUN npm install && echo INSTALLED_PKG 
+RUN npm audit fix && echo AUDIT DONE
+RUn npm i grunt-cli
+RUN npm i gulp-cli
+run ls
+RUN npm build
+RUN ls
+run echo done 
+#RUN gulp
+#npm install
 
 # 
 # Which ports you want to be exposing from this 
 # container
 #
+
 EXPOSE  3000
 
 #
