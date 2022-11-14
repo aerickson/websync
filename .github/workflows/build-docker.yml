@@ -54,12 +54,12 @@ jobs:
 ##          username: ${{ secrets.DOCKERHUB_USERNAME }}
 ##          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Docker meta
-         id: <meta_id> # you'll use this in the next step
+         id: websync           # you'll use this in the next step
          uses: docker/metadata-action@v3
          with:
            # list of Docker images to use as base name for tags
            images: |
-             <specify the image name>
+             websync
            # Docker tags based on the following events/attributes
            tags: |
              type=schedule
@@ -75,5 +75,5 @@ jobs:
            context: .
            platforms: linux/amd64,linux/arm64/v8
            push: ${{ github.event_name != 'pull_request' }}
-           tags: ${{ steps.<meta_id>.outputs.tags }}
-           labels: ${{ steps.<meta_id>.outputs.labels }}
+           tags: ${{ steps.websync.outputs.tags }}
+           labels: ${{ steps.websync.outputs.labels }}
