@@ -53,27 +53,11 @@ jobs:
 ##        with:
 ##          username: ${{ secrets.DOCKERHUB_USERNAME }}
 ##          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Docker meta
-        id: websync           # you'll use this in the next step
-        uses: docker/metadata-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v2
         with:
-          # list of Docker images to use as base name for tags
-          images: |
-            websync
-          # Docker tags based on the following events/attributes
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
-       - name: Build and push
-         uses: docker/build-push-action@v2
-         with:
-           context: .
-           platforms: linux/amd64,linux/arm64/v8
-           push: ${{ github.event_name != 'pull_request' }}
-           tags: ${{ steps.websync.outputs.tags }}
-           labels: ${{ steps.websync.outputs.labels }}
+          context: .
+          platforms: linux/amd64,linux/arm64/v8
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.websync.outputs.tags }}
+          labels: ${{ steps.websync.outputs.labels }}
