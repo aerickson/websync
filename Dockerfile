@@ -36,6 +36,7 @@ WORKDIR /src
 
 
 #RUN apk add musl-dev
+RUN ( [[ -z "$NPM_REGISTRY" ]] || npm set registry $NPM_REGISTRY  ) || true 
 RUN npm i --package-lock-only && npm audit fix --force
 RUN npm install && echo INSTALLED_PKG 
 RUN npm audit fix && echo AUDIT DONE
