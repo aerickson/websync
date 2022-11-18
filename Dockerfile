@@ -39,8 +39,8 @@ WORKDIR /src
 RUN npm i --package-lock-only && npm audit fix --force
 RUN npm install && echo INSTALLED_PKG 
 RUN npm audit fix && echo AUDIT DONE
-RUn npm i grunt-cli
-RUN npm i gulp-cli
+
+RUN npm i -g gulp-cli grunt-cli
 RUN bower install --allow-root
 RUN gulp
 RUN gulp dist
