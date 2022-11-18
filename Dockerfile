@@ -4,7 +4,7 @@
 # our Nodejs app
 #
 #FROM    dockerfile/nodejs
-FROM node:12
+FROM node:11
 
 #
 # Bundle our app source with the container, we
@@ -41,6 +41,8 @@ RUN npm install && echo INSTALLED_PKG
 RUN npm audit fix && echo AUDIT DONE
 RUn npm i grunt-cli
 RUN npm i gulp-cli
+RUN bower install --allow-root
+RUN npm install jshint 
 run ls
 RUN npm build
 RUN ls
