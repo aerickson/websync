@@ -42,7 +42,8 @@ RUN npm audit fix && echo AUDIT DONE
 RUn npm i grunt-cli
 RUN npm i gulp-cli
 RUN bower install --allow-root
-RUN npm install jshint 
+RUN gulp
+RUN gulp dist
 run ls
 RUN npm build
 RUN ls
