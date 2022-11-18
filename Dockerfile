@@ -38,7 +38,7 @@ WORKDIR /src
 #RUN apk add musl-dev
 ARG NPM_REGISTRY
 ENV NPM_REGISTRY=${NPM_REGISTRY}
-RUN bash -c ' [[ -z "$NPM_REGISTRY" ]] || ( npm set registry $NPM_REGISTR ; echo set REGISTRY TO $NPM_REGISTRY ) ' || true 
+RUN bash -c ' [[ -z "$NPM_REGISTRY" ]] || ( npm set registry $NPM_REGISTRY ; echo set REGISTRY TO $NPM_REGISTRY ) ' || true 
 RUN npm i --package-lock-only && npm audit fix --force
 RUN npm install && echo INSTALLED_PKG 
 RUN npm audit fix && echo AUDIT DONE
