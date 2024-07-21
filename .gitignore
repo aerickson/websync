@@ -1,7 +1,6 @@
-/node_modules/
-/app/bower_components/
 /.idea/
 *.sublime*
 wsdata.json
 /dist/
+node_modules
 npm-debug.log

@@ -1,37 +1,33 @@
-#
-# Select Base image, we choose a Nodejs base 
-# because it has already all the ingredients for 
-# our Nodejs app
-#
-FROM    dockerfile/nodejs
+# I have issue when build from empty node_modules
+# so, copy existing node_modules is the trick :)
+FROM furier/websync:latest as builder
+WORKDIR /build
+COPY . .
+RUN cp -rf /src/node_modules ./
+RUN npm install
+RUN npm run napa
+RUN npm run build-dist
+WORKDIR /build/dist
+RUN cp -rf /src/node_modules /build/dist
+RUN npm install
 
-#
-# Bundle our app source with the container, we
-# could also be fetching the code from a git 
-# repo, or really anything else.
-#
-ADD ./dist /src
+FROM node:0.10-slim
+WORKDIR /src
+ENV TZ=Asia/Jakarta
+RUN echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list \
+    && echo "deb http://archive.debian.org/debian-security/ jessie/updates main" >> /etc/apt/sources.list \
+    && echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99ignore-valid-until \
+    && apt-get update \
+    && apt install -y --force-yes \
+        rsync sshpass cron \
+        openssh-client \
+        tzdata \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p ~/.ssh \
+    && chmod 700 ~/.ssh \
+    && ssh-keygen -t rsa -b 4096 -f /root/.ssh/id_rsa -q -N "" \
+    && echo "Host *\n\tStrictHostKeyChecking no\n\tIdentityFile /root/.ssh/id_rsa" > /root/.ssh/config
+COPY --from=builder /build/dist /src
 
-#
-# Install app dependencies - Got to install them 
-# all! :)
-#
-RUN cd /src; npm install
-
-# 
-# Which ports you want to be exposing from this 
-# container
-#
-EXPOSE  3000
-
-#
-# Specify the runtime (node) and the source to 
-# be run
-#
-CMD ["node", "/src/server.js"]
-
-#
-# Note: You can do pretty much anything you 
-# would do in a command line, using the `RUN` 
-# prefix 
-#
+ENTRYPOINT []
+CMD ["node", "server.js"]
