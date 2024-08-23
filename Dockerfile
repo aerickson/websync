@@ -11,7 +11,7 @@ WORKDIR /build/dist
 RUN cp -rf /src/node_modules /build/dist
 RUN npm install
 
-FROM node:0.14-slim
+FROM node:0.12-slim
 WORKDIR /src
 # ENV TZ=Asia/Jakarta
 RUN echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list \
