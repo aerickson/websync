@@ -11,9 +11,9 @@ WORKDIR /build/dist
 RUN cp -rf /src/node_modules /build/dist
 RUN npm install
 
-FROM node:0.10-slim
+FROM node:0.14-slim
 WORKDIR /src
-ENV TZ=Asia/Jakarta
+# ENV TZ=Asia/Jakarta
 RUN echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list \
     && echo "deb http://archive.debian.org/debian-security/ jessie/updates main" >> /etc/apt/sources.list \
     && echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99ignore-valid-until \
